@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,14 @@ public class CustomerController {
 	
 	@Autowired
 	CustomerMapper customerMapper;
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<CustomerDTO> delete(@PathVariable("id") Integer id)throws Exception{
+		
+		customerService.deleteById(id);
+		
+		return ResponseEntity.ok().build();
+	}
 	
 	@PutMapping()
 	public ResponseEntity<CustomerDTO> update(@Valid @RequestBody CustomerDTO customerDTO)throws Exception{
