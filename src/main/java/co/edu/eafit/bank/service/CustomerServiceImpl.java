@@ -10,6 +10,9 @@ import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.eafit.bank.domain.Customer;
 import co.edu.eafit.bank.repository.CustomerRepository;
@@ -23,23 +26,44 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Autowired
 	Validator validator;
+	
+	@Override
+	public void validate(Customer entity) throws Exception {
+		Set<ConstraintViolation<Customer>> constrainsViolations=validator.validate(entity);
+		
+		if(constrainsViolations.isEmpty()==false) {
+			throw new ConstraintViolationException(constrainsViolations);
+		}
+
+	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Customer> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return customerRepository.findAll();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Customer> findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerRepository.findById(id);
 	}
 
 	@Override
+	@Transactional(readOnly = false,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 	public Customer save(Customer entity) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(entity==null) {
+			throw new Exception("El customer es nulo");
+		}
+		
+		validate(entity);
+		
+		if(customerRepository.existsById(entity.getCustId())==true){
+			throw new Exception("El customer ya existe");
+		}
+		
+		return customerRepository.save(entity);
 	}
 
 	@Override
@@ -60,16 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	}
 
-	@Override
-	public void validate(Customer entity) throws Exception {
-		Set<ConstraintViolation<Customer>> constrainsViolations=validator.validate(entity);
-		
-		if(constrainsViolations.isEmpty()==false) {
-			throw new ConstraintViolationException(constrainsViolations);
-		}
-
-	}
-
+	
 	@Override
 	public Long count() {
 		// TODO Auto-generated method stub
