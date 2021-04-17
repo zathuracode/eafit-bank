@@ -3,6 +3,8 @@ package co.edu.eafit.bank.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ public class CustomerController {
 	CustomerMapper customerMapper;
 	
 	@PutMapping()
-	public ResponseEntity<CustomerDTO> update(@RequestBody CustomerDTO customerDTO)throws Exception{
+	public ResponseEntity<CustomerDTO> update(@Valid @RequestBody CustomerDTO customerDTO)throws Exception{
 		
 		Customer customer=customerMapper.customerDTOtoCustomer(customerDTO);
 		customer=customerService.update(customer);
@@ -40,7 +42,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<CustomerDTO> save(@RequestBody CustomerDTO customerDTO)throws Exception{
+	public ResponseEntity<CustomerDTO> save(@Valid @RequestBody CustomerDTO customerDTO)throws Exception{
 		
 		Customer customer=customerMapper.customerDTOtoCustomer(customerDTO);
 		customer=customerService.save(customer);
