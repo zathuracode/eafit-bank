@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.eafit.bank.domain.Customer;
 import co.edu.eafit.bank.dto.CustomerDTO;
+import co.edu.eafit.bank.mapper.CustomerMapper;
 import co.edu.eafit.bank.service.CustomerService;
 
 @RestController
@@ -22,6 +23,9 @@ public class CustomerController {
 	@Autowired
 	CustomerService customerService;
 	
+	@Autowired
+	CustomerMapper customerMapper;
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerDTO> findById(@PathVariable("id") Integer id){
 		
@@ -29,7 +33,7 @@ public class CustomerController {
 		
 		Customer customer=(customerOptional.isPresent()==true)?customerOptional.get():null;
 		
-		CustomerDTO customerDTO = customerToCustomerDTO(customer);
+		CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
 		
 		return ResponseEntity.ok().body(customerDTO);
 	}
@@ -37,36 +41,11 @@ public class CustomerController {
 	@GetMapping()
 	public ResponseEntity<List<CustomerDTO>> findAll(){
 		List<Customer> customers=customerService.findAll();
-		List<CustomerDTO> customerDTOs = customersToCustomersDTOs(customers);
+		List<CustomerDTO> customerDTOs = customerMapper.customersToCustomersDTOs(customers);
 		
 		return ResponseEntity.ok().body(customerDTOs);
 	}
 
-	private List<CustomerDTO> customersToCustomersDTOs(List<Customer> customers) {
-		List<CustomerDTO> customerDTOs=new ArrayList<>(customers.size());
-		
-		for (Customer customer : customers) {
-			CustomerDTO customerDTO=customerToCustomerDTO(customer);
-			customerDTOs.add(customerDTO);
-		}
-		return customerDTOs;
-	}
-
-	private CustomerDTO customerToCustomerDTO(Customer customer) {
-		
-		if(customer==null)
-			return null;
-		
-		CustomerDTO customerDTO=new CustomerDTO();
-		customerDTO.setAddress(customer.getAddress());
-		customerDTO.setCustId(customer.getCustId());
-		customerDTO.setDotyId(customer.getDocumentType().getDotyId());
-		customerDTO.setEmail(customer.getEmail());
-		customerDTO.setEnable(customer.getEnable());
-		customerDTO.setName(customer.getName());
-		customerDTO.setPhone(customer.getPhone());
-		customerDTO.setToken(customer.getToken());
-		return customerDTO;
-	}
+	
 		
 }
