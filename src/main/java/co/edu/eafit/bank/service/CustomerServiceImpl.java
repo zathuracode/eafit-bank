@@ -2,7 +2,10 @@ package co.edu.eafit.bank.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +62,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void validate(Customer entity) throws Exception {
-		// TODO Auto-generated method stub
+		Set<ConstraintViolation<Customer>> constrainsViolations=validator.validate(entity);
+		
+		if(constrainsViolations.isEmpty()==false) {
+			throw new ConstraintViolationException(constrainsViolations);
+		}
 
 	}
 
