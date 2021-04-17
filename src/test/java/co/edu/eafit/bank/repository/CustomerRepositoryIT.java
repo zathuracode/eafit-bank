@@ -59,6 +59,40 @@ class CustomerRepositoryIT {
 	}
 	
 	@Test
+	@Order(2)
+	void debeModificarUnCustomer() {
+		//Arrange
+		Integer idDocumentType=1;
+		Integer idCustomer=14505050;
+		
+		Customer customer=null;
+		DocumentType documentType=null;
+		
+		Optional<Customer> customerOptional=null;
+		Optional<DocumentType> documentTypeOptional=documentTypeRepository.findById(idDocumentType);
+		documentType=documentTypeOptional.get();
+		
+		customerOptional=customerRepository.findById(idCustomer);
+		
+		if(customerOptional.isEmpty()==true) {
+			throw new RuntimeException("El customer no existe");
+		}
+		String nameExpected="Homero J Simpson Gomez";
+		
+		customer=customerOptional.get();
+		customer.setName("Homero J Simpson Gomez");
+	
+		
+		//Act
+			customer=customerRepository.save(customer);
+			
+		//Assert
+			assertNotNull(customer,"El customer es nulo no se grabo");
+			assertEquals(nameExpected, customer.getName());
+		
+	}
+	
+	@Test
 	@Order(4)
 	void debeConsultarUnCustomerPorId() {
 		
