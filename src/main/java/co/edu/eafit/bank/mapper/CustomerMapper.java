@@ -11,5 +11,10 @@ public interface CustomerMapper {
 	
 	@Mapping(source ="documentType.dotyId", target = "dotyId" )
 	public CustomerDTO customerToCustomerDTO(Customer customer);
+	
+	@Mapping(target ="documentType.dotyId", source = "dotyId" )
+	public Customer customerDTOtoCustomer(CustomerDTO customerDTO);
+	
+	
 
 }
