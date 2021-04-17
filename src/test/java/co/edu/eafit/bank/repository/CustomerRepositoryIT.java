@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
+@TestMethodOrder(OrderAnnotation.class)
 class CustomerRepositoryIT {
 	
 	@Autowired
@@ -24,6 +28,7 @@ class CustomerRepositoryIT {
 	DocumentTypeRepository documentTypeRepository; 
 	
 	@Test
+	@Order(1)
 	void debeCrearUnCustomer() {
 		//Arrange
 		Integer idDocumentType=1;
@@ -54,6 +59,7 @@ class CustomerRepositoryIT {
 	}
 	
 	@Test
+	@Order(4)
 	void debeConsultarUnCustomerPorId() {
 		
 		//Arrange
@@ -73,6 +79,7 @@ class CustomerRepositoryIT {
 	}
 
 	@Test
+	@Order(5)
 	void debeConsultarUnaListaDeClientes() {
 		
 		//Arrange
