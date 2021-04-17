@@ -62,16 +62,11 @@ class CustomerRepositoryIT {
 	@Order(2)
 	void debeModificarUnCustomer() {
 		//Arrange
-		Integer idDocumentType=1;
 		Integer idCustomer=14505050;
 		
 		Customer customer=null;
-		DocumentType documentType=null;
 		
-		Optional<Customer> customerOptional=null;
-		Optional<DocumentType> documentTypeOptional=documentTypeRepository.findById(idDocumentType);
-		documentType=documentTypeOptional.get();
-		
+		Optional<Customer> customerOptional=null;	
 		customerOptional=customerRepository.findById(idCustomer);
 		
 		if(customerOptional.isEmpty()==true) {
@@ -89,6 +84,29 @@ class CustomerRepositoryIT {
 		//Assert
 			assertNotNull(customer,"El customer es nulo no se grabo");
 			assertEquals(nameExpected, customer.getName());
+		
+	}
+	
+	@Test
+	@Order(3)
+	void debeBorrarUnCustomer() {
+		//Arrange
+		Integer idCustomer=14505050;
+		Customer customer=null;
+		Optional<Customer> customerOptional=null;	
+		customerOptional=customerRepository.findById(idCustomer);
+		
+		if(customerOptional.isEmpty()==true) {
+			throw new RuntimeException("El customer no existe");
+		}
+		
+		
+		customer=customerOptional.get();
+		
+		//Act
+			customerRepository.delete(customer);
+			
+		//Assert
 		
 	}
 	
