@@ -1,5 +1,7 @@
 package co.edu.eafit.bank.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,34 @@ public class CustomerController {
 		
 		Customer customer=(customerOptional.isPresent()==true)?customerOptional.get():null;
 		
+		CustomerDTO customerDTO = customerToCustomerDTO(customer);
+		
+		return ResponseEntity.ok().body(customerDTO);
+	}
+	
+	@GetMapping()
+	public ResponseEntity<List<CustomerDTO>> findAll(){
+		List<Customer> customers=customerService.findAll();
+		List<CustomerDTO> customerDTOs = customersToCustomersDTOs(customers);
+		
+		return ResponseEntity.ok().body(customerDTOs);
+	}
+
+	private List<CustomerDTO> customersToCustomersDTOs(List<Customer> customers) {
+		List<CustomerDTO> customerDTOs=new ArrayList<>(customers.size());
+		
+		for (Customer customer : customers) {
+			CustomerDTO customerDTO=customerToCustomerDTO(customer);
+			customerDTOs.add(customerDTO);
+		}
+		return customerDTOs;
+	}
+
+	private CustomerDTO customerToCustomerDTO(Customer customer) {
+		
+		if(customer==null)
+			return null;
+		
 		CustomerDTO customerDTO=new CustomerDTO();
 		customerDTO.setAddress(customer.getAddress());
 		customerDTO.setCustId(customer.getCustId());
@@ -36,8 +66,7 @@ public class CustomerController {
 		customerDTO.setName(customer.getName());
 		customerDTO.setPhone(customer.getPhone());
 		customerDTO.setToken(customer.getToken());
-		
-		return ResponseEntity.ok().body(customerDTO);
+		return customerDTO;
 	}
 		
 }
